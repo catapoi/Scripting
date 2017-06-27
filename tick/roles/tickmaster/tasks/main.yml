@@ -1,0 +1,19 @@
+---
+  - name:
+  - name: add TICK stack repository
+    shell: 'curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add - source /etc/lsb-release'
+  - name: push repository
+    shell: 'echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list'
+  - name: upgrade all packages
+    apt: name=* state=latest
+  - name: install influxdb
+    apt:
+      name: influxdb
+      state: present
+  - name: start service influxdb
+    systemd: state=started name=influxdb
+  - name: create database using custom creentials
+    influxdb_database:
+      hostname: "127.0.0.1"
+      username: "smp"
+      password: "smp4influx"
